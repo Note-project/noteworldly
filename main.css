@@ -5,3 +5,12 @@ body {
 .glyphicon {
 	padding-right: 5px;
 }
+
+.jumbotron {
+	font-family: Papyrus, fantasy;
+}
+
+.form-signin {
+	width: 40%;
+	margin-left: 15%;
+}
