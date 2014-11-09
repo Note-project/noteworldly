@@ -14,3 +14,13 @@ body {
 	width: 40%;
 	margin-left: 15%;
 }
+
+#newNote {
+	width: 50%;
+	height: 175px;
+}
+
+#newPart {
+	margin-left: 8%;
+	font-size: 18px;
+}

@@ -12,16 +12,17 @@
             <div>
                 <ul class="nav nav-pills pull-right" role="tablist">
                   <li role="presentation" class="active"><a href="#"><span class="glyphicon glyphicon-home"></span>Home</a> </li>
-                  <li role="presentation"><a href="#"><span class="glyphicon glyphicon-eye-open"></span>View Notes </a></li>
-                  <li role="presentation"><a href="#"><span class="glyphicon glyphicon-pencil"></span>New Note </a></li>
+                  <li id="view" role="presentation"><a href="#"><span class="glyphicon glyphicon-eye-open"></span>View Notes </a></li>
+                  <li id="new" role="presentation"><a href="#"><span class="glyphicon glyphicon-pencil"></span>New Note </a></li>
                 </ul>
             </div>
             <div class="jumbotron">
                 <h1>All your notes...anywhere in the world!</h1>
             </div>
+            <div  class="mainArea">
                 <form class="form-signin" role="form">
                     <h2 class="form-signin-heading">Please sign in</h2>
-                    <input type="email" class="form-control" placeholder="Email address" required autofocus>
+                    <input type="email" class="form-control" placeholder="Email address" id="id" required autofocus>
                     <input type="password" class="form-control" placeholder="Password">
                     <div class="checkbox">
                         <label>
@@ -31,6 +32,7 @@
                     <button class="btn btn-lg btn-primary btn-block" type="button" id="submit">Sign in</button>
                 </form>
             </div>
+        </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script src="main.js"></script>

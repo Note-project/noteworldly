@@ -13,8 +13,16 @@ $(function () {
 			$.post("http://162.243.45.239/OneNote/recieveNotes.php ", noteData, function (data) {
 	        console.log("success");
 	        $('.form-signin').hide();
+	        $(".mainArea").load("welcomePartial.html");
 	    });
 	});
+
+	$("#new").click(function (){
+		$(".mainArea").load("newPartial.html");
+		setTimeout(function() {
+		 $("#noteName").focus();
+		}, 80);
+	})
 
 
 		file = '';
