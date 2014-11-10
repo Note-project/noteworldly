@@ -20,7 +20,30 @@ body {
 	height: 175px;
 }
 
-#newPart {
+#viewNote {
+	width: 50%;
+	height: 175px;
+	margin-left: 80px;
+	border: none;
+}
+
+#newPart, #viewPart{
 	margin-left: 8%;
 	font-size: 18px;
+}
+
+#save, #edit {
+	background-color: cornflowerblue;
+	display: block;
+}
+
+aside {
+	float: left;
+	border-right: 1px solid grey;
+	width: 20%;
+}
+
+li:hover {
+	color: cornflowerblue;
+	cursor: pointer;
 }
