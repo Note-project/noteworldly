@@ -20,7 +20,7 @@ $(function () {
       $.post("http://162.243.45.239/OneNote/registration.php ", noteData, function (data) {
           console.log(data);
           //check return message to know if the username is valid
-          if(data === "username taken") { 
+          if(data === "username taken") {
             var message = "Username is not available. Try another name. Already registered? Uncheck the Register now box and try again";
             //alert(message);
             $("#alert_placeholder").html("<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><span>"+message+"</span></div>");
@@ -34,7 +34,7 @@ $(function () {
       //send the username and password to see if they match, and process the return value
       $.post("http://162.243.45.239/OneNote/login.php ", noteData, function (data) {
         //check return message is not false to know if the username and password match
-        if(data !== "false") { 
+        if(data !== "false") {
           //get the userID number out
           var userObj = $.parseJSON(data);
           user = userObj[0].userID;
@@ -53,6 +53,9 @@ $(function () {
   $("#new").click(function (){
     //Checks to make sure they are logged in
     if(email !== ""){
+      //change the "active" state to the current tab
+      $(".container-fluid li").removeClass("active");
+      $(this).addClass("active");
       //loads the veiw for entering a note
       $(".mainArea").load("newPartial.html", function() {
         $("#noteName").focus();
@@ -72,9 +75,9 @@ $(function () {
           titleArea = $("#noteName"),
           title = titleArea.val(),
           note = noteArea.val(),
-          noteData = {email: email, title: title, note: note};
+          noteData = {email: email, user: user, title: title, note: note};
       console.log(noteData);
-        //send the user, title, and note to the database
+        //send the user, userId, title, and note to the database
         $.post("http://162.243.45.239/OneNote/recieveNotes.php ", noteData, function (data) {
             console.log(data);
             //set fag false so display notes does not read from the cache
@@ -90,6 +93,9 @@ $(function () {
   $("#view").click(function (){
     //Checks to make sure they are logged in
     if(email !== ""){
+      //change the "active" state to the current tab
+      $(".container-fluid li").removeClass("active");
+      $(this).addClass("active");
       //loads the veiw for entering a note
       $(".mainArea").load("viewPartial.html", function() {
         viewNote();
@@ -103,9 +109,10 @@ $(function () {
   //Displays a list of notes
   function viewNote() {
     var noteArea = $("#viewNote"),
-        noteData= {email: email},
+        noteData= {email: email, user: user},
         //create an array to save the notes
-        noteArray = [];
+        noteArray = [],
+        editable;
     getNotes(noteData, function () {
       var i = 0;
       $.each(notes, function (key, value){
@@ -116,7 +123,7 @@ $(function () {
         }
         var clippedNote = value.note.substring(0,20);
         $("#index").append("<li class='list-group-item'>" + clippedNote + ellipses + "</li>");
-        noteArray.push(value.note);
+        noteArray.push({text: value.note, id: value.userId});
         i++;
         //If there are more than 10 notes, only display first 10 with button to view more
         if(i > 9){
@@ -137,17 +144,21 @@ $(function () {
           //Get the index of menu item clicked on, and display the note with that index
           $("#index li").click(function(){
             var noteIndex = $(this).index();
-            noteArea.val(noteArray[noteIndex]);
+            noteArea.val(noteArray[noteIndex].text);
+            noteArea.prop("readonly", true);
+            editable = (noteArray[noteIndex].id) || "Nothing yet" ;
           });
           //TODO - allow for editing the note
+        $("#saveEdit").click(function () {
+          saveEdit(editable);
+        });
+        //$("#saveEdit").prop("disabled", true);
         $("#edit").click(function () {
           //Do something with the note
+          noteArea.prop("readonly", false);
+          $("#saveEdit").removeClass("disabled");
       });
     });
-  }
-  //TODO - write function for pagination
-  function displayMore(index, group){
-    alert("display notes from number " + index + " until " + group + " somehow");
   }
 
   //Get notes from cach, or from database if they have been modified
@@ -171,6 +182,11 @@ $(function () {
     flag = true;
   }
 
+  //TODO - write function for pagination
+  function displayMore(index, group){
+    alert("display notes from number " + index + " until " + group + " somehow");
+  }
+
   //A function to reverse an array
   function reverseArray (array, cb){
     var newArray = [],
@@ -181,6 +197,10 @@ $(function () {
       newArray.push(temp);
     }
     cb(newArray);
+  }
+
+  function saveEdit(editable){
+    alert(editable);
   }
 
 });
