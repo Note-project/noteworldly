@@ -7,6 +7,8 @@ $(function () {
       user = "",
       notes = [],
       cache = [],
+      //set amount of results to show a one time (0 indexed)
+      listLength = 9,
       //set flag to use cache if no new notes where added
       flag = true;
 
@@ -112,51 +114,49 @@ $(function () {
         noteData= {email: email, user: user},
         //create an array to save the notes
         noteArray = [],
+        //save a handle on note being edited
         editable;
     getNotes(noteData, function () {
       var i = 0;
       $.each(notes, function (key, value){
         var ellipses = "";
-        //If note is more than 20 chars, only display the first 20 with an ellipses in the sidebar
-        if(value.note.length > 20) {
+        //choose title to display, if none, display beginning of note
+        var sideTitle = value.title !== "" ? value.title : value.note;
+        //If title is more than 20 chars, only display the first 20 with an ellipses in the sidebar
+        if(sideTitle.length > 20) {
           ellipses = "...";
         }
-        var clippedNote = value.note.substring(0,20);
-        $("#index").append("<li class='list-group-item'>" + clippedNote + ellipses + "</li>");
-        noteArray.push({text: value.note, id: value.userId});
+        var clippedTitle = sideTitle.substring(0,20);
+        $("#index").append("<li class='list-group-item'>" + clippedTitle + ellipses + "</li>");
+        noteArray.push({text: value.note, id: value.userId, noteID: value.noteID});
         i++;
-        //If there are more than 10 notes, only display first 10 with button to view more
-        if(i > 9){
-          $("#index").append("<button class='btn btn-lg' type='button' id='more'>View older</button>");
-          $("#more").click(function(){
-            //clear the side bar to display new results
-            $("#index").empty();
-            //Display the notes from the current index until 10 more, or the end,whatever is less
-            var index = i,
-                end = notes.length,
-                group = end > index + 10 ? index + 10 : end;
-            displayMore(index, group);
-          });
-          //break out of the .each()
-          return false;
+        //If there are more than set amount notes, only display that amount with button to view more
+        if(i > listLength){
+          $("ol li:gt(" + listLength + ")").css( "display", "none");
+          $("#more").css( "display", "inline-block");
         }
-          });
-          //Get the index of menu item clicked on, and display the note with that index
-          $("#index li").click(function(){
-            var noteIndex = $(this).index();
-            noteArea.val(noteArray[noteIndex].text);
-            noteArea.prop("readonly", true);
-            editable = (noteArray[noteIndex].id) || "Nothing yet" ;
-          });
-          //TODO - allow for editing the note
-        $("#saveEdit").click(function () {
-          saveEdit(editable);
+      });
+      $("#more").click(function(){
+          viewMore();
         });
-        //$("#saveEdit").prop("disabled", true);
-        $("#edit").click(function () {
-          //Do something with the note
-          noteArea.prop("readonly", false);
-          $("#saveEdit").removeClass("disabled");
+      //Get the index of menu item clicked on, and display the note with that index
+      $("#index li").click(function(){
+        var noteIndex = $(this).index();
+        noteArea.val(noteArray[noteIndex].text);
+        //dont allow for editing or clicking "Save Changes" unless edit button is clicked
+        noteArea.prop("readonly", true);
+        $("#saveEdit").addClass("disabled");
+        editable = (noteArray[noteIndex].id) || "Nothing yet" ;
+      });
+      //allow for editing the note
+      $("#saveEdit").click(function () {
+        saveEdit(editable);
+      });
+      $("#edit").click(function () {
+        //Make not e editable, and enable button
+        noteArea.prop("readonly", false);
+        $("#saveEdit").removeClass("disabled");
+        //TODO - write code to save updated note
       });
     });
   }
@@ -182,9 +182,13 @@ $(function () {
     flag = true;
   }
 
-  //TODO - write function for pagination
-  function displayMore(index, group){
-    alert("display notes from number " + index + " until " + group + " somehow");
+  //TODO - write function for pagination to view newer notes
+  function viewMore(){
+    //clear the side bar to display new results
+    $("ol li:lt("+listLength+1+")").css( "display", "none");
+    //Display the notes from the current index up until 10 more
+    $("ol li:gt("+listLength+"):lt(10)").css( "display", "block");
+    listLength += 10;
   }
 
   //A function to reverse an array
@@ -200,7 +204,8 @@ $(function () {
   }
 
   function saveEdit(editable){
-    alert(editable);
+    //check that a note has been selected
+    alert(editable ? editable : "Choose a note to edit");
   }
 
 });

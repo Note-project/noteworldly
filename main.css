@@ -48,3 +48,11 @@ li:hover {
 	cursor: pointer;
 }
 
+#more {
+	background-color: cornflowerblue;
+	display: none;
+}
+
+#saveEdit{
+	margin: 20px;
+}
