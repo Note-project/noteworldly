@@ -21,7 +21,7 @@ body {
 }
 
 #viewNote {
-	width: 80%;
+	width: 95%;
 	height: 275px;
 	margin-left: 80px;
 	border: 5px solid rgb(230, 230, 230);
@@ -37,12 +37,6 @@ body {
 	display: block;
 }
 
-/*aside {
-	float: left;
-	border-right: 1px solid lightgrey;
-	width: 20%;
-}*/
-
 li:hover {
 	color: cornflowerblue;
 	cursor: pointer;
@@ -53,6 +47,8 @@ li:hover {
 	display: none;
 }
 
-#saveEdit{
-	margin: 20px;
+
+.saveArea {
+	display: flex;
+	float: right;
 }

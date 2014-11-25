@@ -128,7 +128,7 @@ $(function () {
         }
         var clippedTitle = sideTitle.substring(0,20);
         $("#index").append("<li class='list-group-item'>" + clippedTitle + ellipses + "</li>");
-        noteArray.push({text: value.note, id: value.userId, noteID: value.noteID});
+        noteArray.push({text: value.note, noteID: value.noteID});
         i++;
         //If there are more than set amount notes, only display that amount with button to view more
         if(i > listLength){
@@ -146,7 +146,7 @@ $(function () {
         //dont allow for editing or clicking "Save Changes" unless edit button is clicked
         noteArea.prop("readonly", true);
         $("#saveEdit").addClass("disabled");
-        editable = (noteArray[noteIndex].id) || "Nothing yet" ;
+        editable = (noteArray[noteIndex].noteID);
       });
       //allow for editing the note
       $("#saveEdit").click(function () {
@@ -205,7 +205,24 @@ $(function () {
 
   function saveEdit(editable){
     //check that a note has been selected
-    alert(editable ? editable : "Choose a note to edit");
+    if(!editable){
+      alert("Choose a note to edit");
+    } else {
+      var noteArea = $("#viewNote"),
+          //titleArea = $("#noteName"),
+          //title = titleArea.val(),
+          note = noteArea.val(),
+          noteData = {email: email, noteID: editable, note: note};
+      console.log(noteData);
+      //send the user, noteId, title, and note to the database
+      $.post("http://162.243.45.239/OneNote/recieveNotes.php ", noteData, function (data) {
+          console.log(data);
+          //display the result
+          $("#result").html(data).delay(4000).fadeOut();
+          //set fag false so display notes does not read from the cache
+          flag =false;
+      });
+    }
   }
 
 });
