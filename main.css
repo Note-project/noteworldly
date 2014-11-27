@@ -52,3 +52,14 @@ li:hover {
 	display: flex;
 	float: right;
 }
+
+#title {
+	border:none;
+	font-size: 35px;
+	color: blue;
+	text-align: center;
+}
+
+#result {
+	padding-right: 20px;
+}

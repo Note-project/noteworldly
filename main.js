@@ -111,6 +111,7 @@ $(function () {
   //Displays a list of notes
   function viewNote() {
     var noteArea = $("#viewNote"),
+        titleArea = $("#title"),
         noteData= {email: email, user: user},
         //create an array to save the notes
         noteArray = [],
@@ -128,7 +129,7 @@ $(function () {
         }
         var clippedTitle = sideTitle.substring(0,20);
         $("#index").append("<li class='list-group-item'>" + clippedTitle + ellipses + "</li>");
-        noteArray.push({text: value.note, noteID: value.noteID});
+        noteArray.push({title: value.title, text: value.note, noteID: value.noteID});
         i++;
         //If there are more than set amount notes, only display that amount with button to view more
         if(i > listLength){
@@ -139,9 +140,10 @@ $(function () {
       $("#more").click(function(){
           viewMore();
         });
-      //Get the index of menu item clicked on, and display the note with that index
+      //Get the index of menu item clicked on, and display the title and note with that index
       $("#index li").click(function(){
         var noteIndex = $(this).index();
+        titleArea.val(noteArray[noteIndex].title.substring(0,20));
         noteArea.val(noteArray[noteIndex].text);
         //dont allow for editing or clicking "Save Changes" unless edit button is clicked
         noteArea.prop("readonly", true);
@@ -153,15 +155,16 @@ $(function () {
         saveEdit(editable);
       });
       $("#edit").click(function () {
-        //Make not e editable, and enable button
+        //Make note editable, and enable button
         noteArea.prop("readonly", false);
         $("#saveEdit").removeClass("disabled");
-        //TODO - write code to save updated note
+        //redisplay results area hidden by fade()
+        $("#result").html("").show();
       });
     });
   }
 
-  //Get notes from cach, or from database if they have been modified
+  //Get notes from cache, or from database if they have been modified
   function getNotes (noteData, cb) {
     if(cache.length !== 0 && flag === true){
       notes = cache;
@@ -209,10 +212,10 @@ $(function () {
       alert("Choose a note to edit");
     } else {
       var noteArea = $("#viewNote"),
-          //titleArea = $("#noteName"),
-          //title = titleArea.val(),
+          titleArea = $("#title"),
+          title = titleArea.val(),
           note = noteArea.val(),
-          noteData = {email: email, noteID: editable, note: note};
+          noteData = {email: email, noteID: editable, title: title, note: note};
       console.log(noteData);
       //send the user, noteId, title, and note to the database
       $.post("http://162.243.45.239/OneNote/recieveNotes.php ", noteData, function (data) {
