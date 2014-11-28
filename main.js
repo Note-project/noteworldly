@@ -51,6 +51,12 @@ $(function () {
     }
   });
 
+  $("#home").click(function (){
+    $(".container-fluid li").removeClass("active");
+    $(this).addClass("active");
+    $(".mainArea").load("welcomePartial.html");
+  });
+
   //When the user clicks "New Note" tab, they can enter a new note
   $("#new").click(function (){
     //Checks to make sure they are logged in

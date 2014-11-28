@@ -1,5 +1,7 @@
 body {
     padding: 10px;
+    /*background-color: rgb(250, 250, 250);*/
+    background-image: url("images/noteonworld.png");
 }
 
 .glyphicon {
@@ -18,6 +20,7 @@ body {
 #newNote {
 	width: 50%;
 	height: 175px;
+  border-radius: 12px;
 }
 
 #viewNote {
@@ -25,6 +28,7 @@ body {
 	height: 275px;
 	margin-left: 80px;
 	border: 5px solid rgb(230, 230, 230);
+  border-radius: 12px;
 }
 
 #newPart, #viewPart{
@@ -62,4 +66,32 @@ li:hover {
 
 #result {
 	padding-right: 20px;
+}
+
+img {
+	/*clear:right;*/
+}
+
+input {
+  border-radius: 5px;
+}
+
+.checkbox label {
+  font-weight: 600;
+}
+
+#choose {
+	display: block;
+  float: right;
+  font-size: 25px;
+  color: dimgray;
+}
+
+.list-group-item {
+ background-color: whitesmoke;
+}
+
+#welcome, h2 {
+  color: #2268A5;
+  font-size: 210%;
 }
