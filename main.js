@@ -42,6 +42,7 @@ $(function () {
           user = userObj[0].userID;
           $(".form-signin").hide();
           $(".mainArea").load("welcomePartial.html");
+          window.location = "./#?page=home&email=" + email + "&user=" + user;
         } else {
           var message = "Username and Password do not match, try again. Not registered? Check the Register now box to register";
             //alert(message);
@@ -51,25 +52,41 @@ $(function () {
     }
   });
 
+  var check = get_query();
+    console.dir(check);
+    email = check.email;
+    user = check.user;
+    if(email !== "" && email !== undefined){
+      switch  (check.page) {
+        case "new":
+          loadPage("new", "newPartial");
+          //alert("Supposed to go to new");
+          break;
+        case "view":
+          loadPage("view", "viewPartial");
+          //alert("Supposed to go to view");
+          break;
+        default:
+          loadPage("home", "welcomePartial");
+          //alert("Supposed to go to home");
+        }
+    }
+
   $("#home").click(function (){
-    $(".container-fluid li").removeClass("active");
-    $(this).addClass("active");
-    $(".mainArea").load("welcomePartial.html");
+    //Checks to make sure they are logged in
+    if(email !== "" && email !== undefined){
+      loadPage("home", "welcomePartial");
+    } else {
+      //If user is not logged in
+      alert("You must sign in first");
+    }
   });
 
   //When the user clicks "New Note" tab, they can enter a new note
   $("#new").click(function (){
     //Checks to make sure they are logged in
-    if(email !== ""){
-      //change the "active" state to the current tab
-      $(".container-fluid li").removeClass("active");
-      $(this).addClass("active");
-      //loads the veiw for entering a note
-      $(".mainArea").load("newPartial.html", function() {
-        $("#noteName").focus();
-        //save note to db
-        saveNote();
-      });
+    if(email !== "" && email !== undefined){
+      loadPage("new", "newPartial");
     } else {
       //If user is not logged in
       alert("You must sign in first");
@@ -100,14 +117,8 @@ $(function () {
   //When the user clicks the "View Notes" button, they can choose a note to view
   $("#view").click(function (){
     //Checks to make sure they are logged in
-    if(email !== ""){
-      //change the "active" state to the current tab
-      $(".container-fluid li").removeClass("active");
-      $(this).addClass("active");
-      //loads the veiw for entering a note
-      $(".mainArea").load("viewPartial.html", function() {
-        viewNote();
-      });
+    if(email !== "" && email !== undefined){
+      loadPage("view", "viewPartial");
     } else {
       //If user is not logged in
       alert("You must sign in first");
@@ -232,6 +243,38 @@ $(function () {
           flag =false;
       });
     }
+  }
+
+  function get_query(){
+    var url = location.href;
+    var qs = url.substring(url.indexOf("?") + 1).split("&");
+    for(var i = 0, result = {}; i < qs.length; i++){
+        qs[i] = qs[i].split("=");
+        result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+    }
+    return result;
+  }
+
+  function loadPage(page, view){
+    //change the "active" state to the current tab
+      $(".container-fluid li").removeClass("active");
+      $(this).addClass("active");
+       //loads the veiw for the welcome page
+      $(".mainArea").load(view + ".html", function() {
+        window.location = "./#?page=" + page + "&email=" + email + "&user=" + user;
+        switch  (page) {
+        case "new":
+          $("#noteName").focus();
+          //save note to db
+          saveNote();
+          break;
+        case "view":
+           viewNote();
+          break;
+        default:
+          break;
+        }
+      });
   }
 
 });
